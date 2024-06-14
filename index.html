@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #808080; /* Fundo cinza */
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Esconder overflow para a chuva */
+        }
+        .container {
+            background-color: #ffffff; /* Fundo branco */
+            padding: 20px;
+            border-radius: 10px; /* Bordas arredondadas */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            margin-bottom: 20px; /* Espaço entre as caixas */
+            text-align: center;
+            z-index: 1; /* Garantir que a caixa fique sobre a chuva */
+        }
+        #question {
+            font-size: 24px;
+            color: #8B0000; /* Vermelho escuro */
+        }
+        #prompt {
+            font-size: 24px;
+            color: #8B0000; /* Vermelho escuro */
+        }
+        .heart {
+            position: absolute;
+            top: -10px;
+            font-size: 24px; /* Tamanho dos corações */
+            animation: fall 5s linear infinite;
+            z-index: 0; /* Garantir que os corações fiquem atrás das caixas */
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Espaço entre os botões */
+            position: relative;
+            top: 50px; /* Posiciona os botões abaixo do bloco branco */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #ffffff;
+            background-color: #8B0000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #a00000;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="prompt">Antes de prosseguir responda a seguinte pergunta:</div>
+    </div>
+    <div class="container">
+        <div id="question">Eu estou sempre certo?</div>
+    </div>
+    <div class="buttons">
+        <button id="sim">Sim</button>
+        <button id="nao">Não</button>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Por meio desse anulo todas as formas de burlar sua resposta anterior (Exemplo: Dedos cruzados ou blefes). Ainda estou sempre certo? 🙃</p>
+            <button id="modalSim">Sim</button>
+        </div>
+    </div>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '🖤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        window.onload = function () {
+            setInterval(createHeart, 300);
+
+            const simButton = document.getElementById("sim");
+            const naoButton = document.getElementById("nao");
+            const modal = document.getElementById("myModal");
+            const closeSpan = document.querySelector(".close");
+            const modalSimButton = document.getElementById("modalSim");
+
+            simButton.addEventListener("click", () => {
+                modal.style.display = "block";
+            });
+
+            closeSpan.onclick = function() {
+                modal.style.display = "none";
+            };
+
+            modalSimButton.addEventListener("click", () => {
+                window.location.href = "file:///C:/Users/leandro.chagas/Desktop/tela3.html";
+            });
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            const handleNao = () => {
+                naoButton.style.position = "fixed";
+                const maxMove = 100; // Maximum movement in pixels
+                let randTop = Math.random() * maxMove * 2 - maxMove;
+                let randLeft = Math.random() * maxMove * 2 - maxMove;
+
+                // Calculate new positions
+                let newTop = naoButton.offsetTop + randTop;
+                let newLeft = naoButton.offsetLeft + randLeft;
+
+                // Ensure the button stays within the window
+                newTop = Math.min(window.innerHeight - naoButton.offsetHeight, Math.max(0, newTop));
+                newLeft = Math.min(window.innerWidth - naoButton.offsetWidth, Math.max(0, newLeft));
+
+                naoButton.style.top = `${newTop}px`;
+                naoButton.style.left = `${newLeft}px`;
+            };
+
+            naoButton.addEventListener("mouseover", handleNao);
+        };
+    </script>
+</body>
+</html>
